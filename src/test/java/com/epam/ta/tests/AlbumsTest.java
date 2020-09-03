@@ -42,6 +42,4 @@ public class AlbumsTest {
         Assert.assertEquals(100, albums.length);
 
     }
-
-    //TODO: add baseClass, endpoints, steps,
 }
