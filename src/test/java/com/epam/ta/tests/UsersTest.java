@@ -1,14 +1,14 @@
-package tests;
+package com.epam.ta.tests;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
-import com.epam.ta.model.album.Album;
+import com.epam.ta.model.user.User;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class AlbumsTest {
+public class UsersTest {
 
     @BeforeEach
     public void initTest() {
@@ -18,7 +18,7 @@ public class AlbumsTest {
     @Test
     public void checkStatusCode() {
         Response response = RestAssured.when()
-                .get("/albums")
+                .get("/users")
                 .andReturn();
         Assert.assertEquals(response.getStatusCode(), 200);
     }
@@ -26,7 +26,7 @@ public class AlbumsTest {
     @Test
     public void checkResponseHeader() {
         Response response = RestAssured.when()
-                .get("/albums")
+                .get("/users")
                 .andReturn();
         String rpContentTypeHeader = response.getHeader("Content-Type");
         Assert.assertEquals(rpContentTypeHeader, "application/json; charset=utf-8");
@@ -35,11 +35,11 @@ public class AlbumsTest {
     @Test
     public void checkResponseBody() {
         Response response = RestAssured.when()
-                .get("/albums")
+                .get("/users")
                 .andReturn();
         ResponseBody<?> responseBody = response.getBody();
-        Album[] albums = responseBody.as(Album[].class);
-        Assert.assertEquals(100, albums.length);
+        User[] users = responseBody.as(User[].class);
+        Assert.assertEquals(10, users.length);
 
     }
 }

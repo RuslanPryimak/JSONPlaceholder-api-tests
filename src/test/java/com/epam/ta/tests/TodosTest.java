@@ -1,14 +1,14 @@
-package tests;
+package com.epam.ta.tests;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
-import com.epam.ta.model.comment.Comment;
+import com.epam.ta.model.todo.Todo;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CommentsTest {
+public class TodosTest {
 
     @BeforeEach
     public void initTest() {
@@ -18,7 +18,7 @@ public class CommentsTest {
     @Test
     public void checkStatusCode() {
         Response response = RestAssured.when()
-                .get("/comments")
+                .get("/todos")
                 .andReturn();
         Assert.assertEquals(response.getStatusCode(), 200);
     }
@@ -26,7 +26,7 @@ public class CommentsTest {
     @Test
     public void checkResponseHeader() {
         Response response = RestAssured.when()
-                .get("/comments")
+                .get("/todos")
                 .andReturn();
         String rpContentTypeHeader = response.getHeader("Content-Type");
         Assert.assertEquals(rpContentTypeHeader, "application/json; charset=utf-8");
@@ -35,11 +35,11 @@ public class CommentsTest {
     @Test
     public void checkResponseBody() {
         Response response = RestAssured.when()
-                .get("/comments")
+                .get("/todos")
                 .andReturn();
         ResponseBody<?> responseBody = response.getBody();
-        Comment[] comments = responseBody.as(Comment[].class);
-        Assert.assertEquals(500, comments.length);
+        Todo[] todos = responseBody.as(Todo[].class);
+        Assert.assertEquals(200, todos.length);
 
     }
 }
