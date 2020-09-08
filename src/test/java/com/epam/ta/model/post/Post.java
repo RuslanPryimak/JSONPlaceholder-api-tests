@@ -2,9 +2,6 @@ package com.epam.ta.model.post;
 
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Data
 public class Post {
 
@@ -12,6 +9,10 @@ public class Post {
     private Integer id;
     private String title;
     private String body;
-    private Map<String, Object> additionalProperties = new HashMap<>();
 
+    public Post(Integer userId, String title, String body) {
+        this.userId = userId;
+        this.title = title;
+        this.body = body;
+    }
 }
