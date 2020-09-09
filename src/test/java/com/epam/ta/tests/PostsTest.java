@@ -1,45 +1,66 @@
 package com.epam.ta.tests;
 
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
+import com.epam.ta.endpoints.PostEndpoint;
 import com.epam.ta.model.post.Post;
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
+import com.epam.ta.steps.PostSteps;
+import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Slf4j
+@DisplayName("Verify Posts")
 public class PostsTest {
 
-    @BeforeEach
-    public void initTest() {
-        RestAssured.baseURI = "http://jsonplaceholder.typicode.com";
+    private static int TEST_POST_ID = 50;
+
+    @Test
+    @DisplayName("Get all Posts")
+    public void verifyAllPosts() {
+        var response = PostEndpoint.getPosts();
+
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_OK);
+
+        var posts = Arrays.asList(new Gson().fromJson(response.jsonPath().prettify(), Post[].class));
+        assertThat(posts.size()).isEqualTo(100);
+
     }
 
     @Test
-    public void checkStatusCode() {
-        Response response = RestAssured.when()
-                .get("/posts")
-                .andReturn();
-        Assert.assertEquals(response.getStatusCode(), 200);
+    @DisplayName("Get existing Post")
+    public void verifyPost() {
+        var response = PostEndpoint.getPost(TEST_POST_ID);
+
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_OK);
+
+        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        PostSteps.verifyPost(post, TEST_POST_ID, 5);
     }
 
     @Test
-    public void checkResponseHeader() {
-        Response response = RestAssured.when()
-                .get("/posts")
-                .andReturn();
-        String rpContentTypeHeader = response.getHeader("Content-Type");
-        Assert.assertEquals(rpContentTypeHeader, "application/json; charset=utf-8");
+    @DisplayName("Add new Post")
+    public void verifyAddPost() {
+        var userId = 6;
+        var testTitle = "title#1";
+        var testBody = "body#1";
+
+        var response = PostEndpoint.addPost(userId, testTitle, testBody);
+
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_CREATED);
+
+        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        PostSteps.verifyPost(post, 101, userId, testTitle, testBody);
     }
 
-    @Test
-    public void checkResponseBody() {
-        Response response = RestAssured.when()
-                .get("/posts")
-                .andReturn();
-        ResponseBody<?> responseBody = response.getBody();
-        Post[] posts = responseBody.as(Post[].class);
-        Assert.assertEquals(100, posts.length);
-
-    }
 }
