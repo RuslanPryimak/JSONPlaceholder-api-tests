@@ -47,6 +47,42 @@ public class PostEndpoint extends BaseClass {
                 .response();
     }
 
+    public static Response deletePost(int postId) {
+        return given()
+                .delete(POST_URI + postId)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+    }
+
+    public static Response updatePostWithPut(int userId, int postId, String title, String body) {
+        var post = new Post(userId, postId, title, body);
+        var requestBody = new Gson().toJson(post);
+        return given()
+                .body(requestBody)
+                .put(POST_URI + postId)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+    }
+
+    public static Response updatePostTitleWithPatch(int postId, String title) {
+        var post = new Post(postId, title);
+        var requestBody = new Gson().toJson(post);
+        return given()
+                .body(requestBody)
+                .patch(POST_URI + postId)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+    }
+
     private static RequestSpecification given() {
         return RestAssured.given().baseUri(baseUrl).port(-1).log().all().contentType(ContentType.JSON);
     }
