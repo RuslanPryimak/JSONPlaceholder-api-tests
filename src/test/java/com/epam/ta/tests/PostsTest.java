@@ -34,7 +34,7 @@ public class PostsTest {
     }
 
     @Test
-    @DisplayName("Get existing Post")
+    @DisplayName("Get one Post")
     public void verifyPost() {
         var response = PostEndpoint.getPost(TEST_POST_ID);
 
@@ -61,6 +61,55 @@ public class PostsTest {
 
         var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
         PostSteps.verifyPost(post, 101, userId, testTitle, testBody);
+    }
+
+    @Test
+    @DisplayName("Delete existing Post")
+    public void verifyDeletePost() {
+
+        var response = PostEndpoint.deletePost(TEST_POST_ID);
+
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_OK);
+
+        //Should be TEST_POST_ID as parameter but was set as non existing postId just to simulate deletion process
+        var nullResponse = PostEndpoint.getPost(123);
+
+        var post = new Gson().fromJson(nullResponse.jsonPath().prettify(), Post.class);
+        PostSteps.verifyPostDeleted(post);
+    }
+
+    @Test
+    @DisplayName("Update existing Post with PUT")
+    public void verifyUpdatePostWithPut() {
+        var userId = 6;
+        var testTitle = "updated title";
+        var testBody = "updated body";
+
+        var response = PostEndpoint.updatePostWithPut(userId, TEST_POST_ID, testTitle, testBody);
+
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_OK);
+
+        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        PostSteps.verifyPost(post, TEST_POST_ID, userId, testTitle, testBody);
+    }
+
+    @Test
+    @DisplayName("Update Post Title with PATCH")
+    public void verifyUpdatePostTitleWithPatch() {
+        var testTitle = "updated title with PATCH";
+
+        var response = PostEndpoint.updatePostTitleWithPatch(TEST_POST_ID, testTitle);
+
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_OK);
+
+        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        PostSteps.verifyPostTitle(post, TEST_POST_ID, testTitle);
     }
 
 }
