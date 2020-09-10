@@ -14,6 +14,8 @@ public class PostEndpoint extends BaseClass {
 
     private static String POST_URI = "posts/";
 
+    private static String COMMENT_URI = "/comments";
+
     public static Response getPost(int postId) {
         return given()
                 .get(POST_URI + postId)
@@ -27,6 +29,16 @@ public class PostEndpoint extends BaseClass {
     public static Response getPosts() {
         return given()
                 .get(POST_URI)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+    }
+
+    public static Response getPostComments(int postId) {
+        return given()
+                .get(POST_URI + postId + COMMENT_URI)
                 .then()
                 .log()
                 .all()
@@ -81,6 +93,18 @@ public class PostEndpoint extends BaseClass {
                 .all()
                 .extract()
                 .response();
+    }
+
+    public static Response getPostsFilterByUserId(int userId) {
+        POST_URI = "posts?userId=" + userId;
+        return given()
+                .get(POST_URI)
+                .then()
+                .log()
+                .all()
+                .extract()
+                .response();
+
     }
 
     private static RequestSpecification given() {
