@@ -4,9 +4,8 @@ import com.epam.ta.endpoints.PostEndpoint;
 import com.epam.ta.model.comment.Comment;
 import com.epam.ta.model.post.Post;
 import com.epam.ta.steps.PostSteps;
-import com.google.gson.Gson;
+import com.epam.ta.utils.JsonConverter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,20 +17,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Verify Posts")
 public class PostsTest {
 
-    private static int TEST_POST_ID = 70;
+    private static final int TEST_POST_ID = 70;
 
-    private static int TEST_USER_ID = 7;
+    private static final int TEST_USER_ID = 7;
 
     @Test
     @DisplayName("Get all Posts")
     public void verifyAllPosts() {
         var response = PostEndpoint.getPosts();
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        var posts = Arrays.asList(new Gson().fromJson(response.jsonPath().prettify(), Post[].class));
+        var posts = Arrays.asList(JsonConverter.convertToJson(response, Post[].class));
         assertThat(posts.size()).isEqualTo(100);
 
     }
@@ -41,11 +38,9 @@ public class PostsTest {
     public void verifyPost() {
         var response = PostEndpoint.getPost(TEST_POST_ID);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        var post = JsonConverter.convertToJson(response, Post.class);
         PostSteps.verifyPost(post, TEST_POST_ID, TEST_USER_ID);
     }
 
@@ -54,11 +49,9 @@ public class PostsTest {
     public void verifyPostComments() {
         var response = PostEndpoint.getPostComments(TEST_POST_ID);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        var comments = Arrays.asList(new Gson().fromJson(response.jsonPath().prettify(), Comment[].class));
+        var comments = Arrays.asList(JsonConverter.convertToJson(response, Comment[].class));
         assertThat(comments.size()).isEqualTo(5);
     }
 
@@ -67,11 +60,9 @@ public class PostsTest {
     public void verifyPostsFilterByUserId() {
         var response = PostEndpoint.getPostsFilterByUserId(TEST_USER_ID);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        var posts = Arrays.asList(new Gson().fromJson(response.jsonPath().prettify(), Post[].class));
+        var posts = Arrays.asList(JsonConverter.convertToJson(response, Post[].class));
         assertThat(posts.size()).isEqualTo(10);
     }
 
@@ -83,11 +74,9 @@ public class PostsTest {
 
         var response = PostEndpoint.addPost(TEST_USER_ID, testTitle, testBody);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_CREATED);
+        BaseAssert.assertStatusCreated(response);
 
-        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        var post = JsonConverter.convertToJson(response, Post.class);
         PostSteps.verifyPost(post, 101, TEST_USER_ID, testTitle, testBody);
     }
 
@@ -96,15 +85,8 @@ public class PostsTest {
     public void verifyDeletePost() {
         var response = PostEndpoint.deletePost(TEST_POST_ID);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        //Should be TEST_POST_ID as parameter but was set as non existing postId just to simulate deletion process
-        var nullResponse = PostEndpoint.getPost(123);
-
-        var post = new Gson().fromJson(nullResponse.jsonPath().prettify(), Post.class);
-        PostSteps.verifyPostDeleted(post);
     }
 
     @Test
@@ -115,11 +97,9 @@ public class PostsTest {
 
         var response = PostEndpoint.updatePostWithPut(TEST_USER_ID, TEST_POST_ID, testTitle, testBody);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
+        var post = JsonConverter.convertToJson(response, Post.class);
         PostSteps.verifyPost(post, TEST_POST_ID, TEST_USER_ID, testTitle, testBody);
     }
 
@@ -130,12 +110,10 @@ public class PostsTest {
 
         var response = PostEndpoint.updatePostTitleWithPatch(TEST_POST_ID, testTitle);
 
-        assertThat(response.getStatusCode())
-                .as("wrong status code")
-                .isEqualTo(HttpStatus.SC_OK);
+        BaseAssert.assertStatusOk(response);
 
-        var post = new Gson().fromJson(response.jsonPath().prettify(), Post.class);
-        PostSteps.verifyPostTitle(post, TEST_POST_ID, testTitle);
+        var post = JsonConverter.convertToJson(response, Post.class);
+        PostSteps.verifyPostAfterTitleChanged(post, TEST_POST_ID, testTitle);
     }
 
 }
