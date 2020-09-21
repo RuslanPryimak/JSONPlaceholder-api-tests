@@ -5,7 +5,7 @@ import org.assertj.core.api.SoftAssertions;
 
 public class PostSteps {
 
-    public static void verifyPost(Post actualPost, Integer id, Integer userId, String title, String body) {
+    public void verifyPost(Post actualPost, Integer id, Integer userId, String title, String body) {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualPost.getId()).isEqualTo(id);
         softly.assertThat(actualPost.getUserId()).isEqualTo(userId);
@@ -15,7 +15,7 @@ public class PostSteps {
 
     }
 
-    public static void verifyPost(Post actualPost, Integer id, Integer userId) {
+    public void verifyPost(Post actualPost, Integer id, Integer userId) {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualPost.getId()).isEqualTo(id);
         softly.assertThat(actualPost.getUserId()).isEqualTo(userId);
@@ -25,7 +25,7 @@ public class PostSteps {
 
     }
 
-    public static void verifyPostAfterTitleChanged(Post actualPost, int id, String title) {
+    public void verifyPostAfterTitleChanged(Post actualPost, int id, String title) {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualPost.getId()).isEqualTo(id);
         softly.assertThat(actualPost.getUserId()).isNotNull();

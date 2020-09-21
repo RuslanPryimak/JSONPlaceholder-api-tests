@@ -14,7 +14,7 @@ public class PostEndpoint extends BaseEndpoint {
 
     private static final Gson GSON = new Gson();
 
-    public static Response getPost(int postId) {
+    public Response getPost(int postId) {
         return given()
                 .get(POST_URI + postId)
                 .then()
@@ -24,7 +24,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response getPosts() {
+    public Response getPosts() {
         return given()
                 .get(POST_URI)
                 .then()
@@ -34,7 +34,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response getPostComments(int postId) {
+    public Response getPostComments(int postId) {
         return given()
                 .get(POST_URI + postId + COMMENT_URI)
                 .then()
@@ -44,7 +44,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response addPost(int userId, String title, String body) {
+    public Response addPost(int userId, String title, String body) {
         var post = new Post(userId, title, body);
         var requestBody = GSON.toJson(post);
         return given()
@@ -57,7 +57,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response deletePost(int postId) {
+    public Response deletePost(int postId) {
         return given()
                 .delete(POST_URI + postId)
                 .then()
@@ -67,7 +67,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response updatePostWithPut(int userId, int postId, String title, String body) {
+    public Response updatePostWithPut(int userId, int postId, String title, String body) {
         var post = new Post(userId, postId, title, body);
         var requestBody = GSON.toJson(post);
         return given()
@@ -80,7 +80,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response updatePostTitleWithPatch(int postId, String title) {
+    public Response updatePostTitleWithPatch(int postId, String title) {
         var post = new Post(postId, title);
         var requestBody = GSON.toJson(post);
         return given()
@@ -93,7 +93,7 @@ public class PostEndpoint extends BaseEndpoint {
                 .response();
     }
 
-    public static Response getPostsFilterByUserId(int userId) {
+    public Response getPostsFilterByUserId(int userId) {
         return given()
                 .get(POST_URI_FILTER + userId)
                 .then()
