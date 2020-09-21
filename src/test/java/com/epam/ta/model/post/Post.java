@@ -1,17 +1,25 @@
 package com.epam.ta.model.post;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Data
+@AllArgsConstructor
 public class Post {
 
     private Integer userId;
     private Integer id;
     private String title;
     private String body;
-    private Map<String, Object> additionalProperties = new HashMap<>();
 
+    public Post(Integer userId, String title, String body) {
+        this.userId = userId;
+        this.title = title;
+        this.body = body;
+    }
+
+    public Post(Integer id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }
