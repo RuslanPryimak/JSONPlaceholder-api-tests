@@ -7,9 +7,9 @@ import io.restassured.specification.RequestSpecification;
 
 public class BaseEndpoint {
 
-    private TestConfiguration testConfiguration = new TestConfiguration();
+    private TestConfiguration testConfig = new TestConfiguration();
 
-    private final String BASE_URL = testConfiguration.baseUrl();
+    private final String BASE_URL = testConfig.baseUrl();
 
     public RequestSpecification given() {
         return RestAssured.given().baseUri(BASE_URL).port(-1).log().all().contentType(ContentType.JSON);
