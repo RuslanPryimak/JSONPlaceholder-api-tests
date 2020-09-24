@@ -19,4 +19,10 @@ public class BaseTest {
                 .isEqualTo(HttpStatus.SC_CREATED);
     }
 
+    public void assertStatusNotFound(Response response) {
+        assertThat(response.getStatusCode())
+                .as("wrong status code")
+                .isEqualTo(HttpStatus.SC_NOT_FOUND);
+    }
+
 }

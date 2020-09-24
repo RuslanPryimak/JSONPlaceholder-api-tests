@@ -4,11 +4,15 @@ import com.epam.ta.endpoints.UserEndpoint;
 import com.epam.ta.model.user.Address;
 import com.epam.ta.model.user.Company;
 import com.epam.ta.model.user.User;
+import com.epam.ta.model.user.UserData;
 import com.epam.ta.steps.UserSteps;
 import com.epam.ta.utils.JsonConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
 
@@ -49,6 +53,28 @@ public class UsersTest {
 
         var user = JsonConverter.convertToJson(response, User.class);
         userSteps.verifyUser(user, TEST_USER_ID, TEST_NAME, TEST_USERNAME);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Get several Users")
+    @EnumSource(UserData.class)
+    public void verifyUsers(UserData userData) {
+        var response = userEndpoint.getUser(userData.getUserId());
+
+        baseTest.assertStatusOk(response);
+
+        var user = JsonConverter.convertToJson(response, User.class);
+        userSteps.verifyUser(user, userData.getUserId(), userData.getName(), userData.getUsername());
+    }
+
+    @ParameterizedTest
+    @DisplayName("Check Users not found")
+    @ValueSource(ints = {11, 12, 13})
+    public void verifyUsersNotFound(int test_user_id) {
+        var response = userEndpoint.getUser(test_user_id);
+
+        baseTest.assertStatusNotFound(response);
+
     }
 
     @Test
