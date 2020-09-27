@@ -5,18 +5,20 @@ import com.epam.ta.model.comment.Comment;
 import com.epam.ta.model.post.Post;
 import com.epam.ta.steps.PostSteps;
 import com.epam.ta.utils.JsonConverter;
+import com.epam.ta.utils.TestResultLoggerExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@DisplayName("Verify Posts")
-public class PostsTest {
-    private BaseTest baseTest = new BaseTest();
+@DisplayName("Posts test suite")
+@ExtendWith(TestResultLoggerExtension.class)
+public class PostsIT extends BaseTest {
 
     private PostEndpoint postEndpoint = new PostEndpoint();
 
@@ -31,7 +33,7 @@ public class PostsTest {
     public void verifyAllPosts() {
         var response = postEndpoint.getPosts();
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
         var posts = Arrays.asList(JsonConverter.convertToJson(response, Post[].class));
         assertThat(posts.size()).isEqualTo(100);
@@ -43,7 +45,7 @@ public class PostsTest {
     public void verifyPost() {
         var response = postEndpoint.getPost(TEST_POST_ID);
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPost(post, TEST_POST_ID, TEST_USER_ID);
@@ -54,18 +56,18 @@ public class PostsTest {
     public void verifyPostComments() {
         var response = postEndpoint.getPostComments(TEST_POST_ID);
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
         var comments = Arrays.asList(JsonConverter.convertToJson(response, Comment[].class));
         assertThat(comments.size()).isEqualTo(5);
     }
 
     @Test
-    @DisplayName("Get all Posts filter by UserId")
+    @DisplayName("Get all Posts filtered by UserId")
     public void verifyPostsFilterByUserId() {
         var response = postEndpoint.getPostsFilterByUserId(TEST_USER_ID);
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
         var posts = Arrays.asList(JsonConverter.convertToJson(response, Post[].class));
         assertThat(posts.size()).isEqualTo(10);
@@ -79,7 +81,7 @@ public class PostsTest {
 
         var response = postEndpoint.addPost(TEST_USER_ID, testTitle, testBody);
 
-        baseTest.assertStatusCreated(response);
+        assertStatusCreated(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPost(post, 101, TEST_USER_ID, testTitle, testBody);
@@ -90,7 +92,7 @@ public class PostsTest {
     public void verifyDeletePost() {
         var response = postEndpoint.deletePost(TEST_POST_ID);
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
     }
 
@@ -102,7 +104,7 @@ public class PostsTest {
 
         var response = postEndpoint.updatePostWithPut(TEST_USER_ID, TEST_POST_ID, testTitle, testBody);
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPost(post, TEST_POST_ID, TEST_USER_ID, testTitle, testBody);
@@ -115,7 +117,7 @@ public class PostsTest {
 
         var response = postEndpoint.updatePostTitleWithPatch(TEST_POST_ID, testTitle);
 
-        baseTest.assertStatusOk(response);
+        assertStatusOk(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPostAfterTitleChanged(post, TEST_POST_ID, testTitle);
