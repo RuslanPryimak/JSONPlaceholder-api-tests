@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @DisplayName("Posts test suite")
 @ExtendWith(TestResultLoggerExtension.class)
-public class PostsTest extends BaseTest {
+public class PostsIT extends BaseTest {
 
     private PostEndpoint postEndpoint = new PostEndpoint();
 

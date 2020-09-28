@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @DisplayName("Users test suite")
 @ExtendWith(TestResultLoggerExtension.class)
-public class UsersTest extends BaseTest {
+public class UsersIT extends BaseTest {
 
     private UserEndpoint userEndpoint = new UserEndpoint();
 
