@@ -3,10 +3,12 @@ package com.epam.ta.steps;
 import com.epam.ta.model.user.Address;
 import com.epam.ta.model.user.Company;
 import com.epam.ta.model.user.User;
+import io.qameta.allure.Step;
 import org.assertj.core.api.SoftAssertions;
 
-public class UserSteps {
+public class UserSteps extends BaseSteps {
 
+    @Step("Verify User with username {username}")
     public void verifyUser(User actualUser, Integer id, String name, String username, String email, Address address, String phone, String website, Company company) {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualUser.getId()).isEqualTo(id);
@@ -20,6 +22,7 @@ public class UserSteps {
 
     }
 
+    @Step("Verify User with username {username}")
     public void verifyUser(User actualUser, Integer id, String name, String username) {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualUser.getId()).isEqualTo(id);
@@ -33,6 +36,7 @@ public class UserSteps {
 
     }
 
+    @Step("Verify User after username changed")
     public void verifyUserAfterUsernameChanged(User actualUser, int userId, String username) {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(actualUser.getId()).isEqualTo(userId);

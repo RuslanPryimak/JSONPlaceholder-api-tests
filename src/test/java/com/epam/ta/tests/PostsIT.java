@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @DisplayName("Posts test suite")
 @ExtendWith(TestResultLoggerExtension.class)
-public class PostsIT extends BaseTest {
+public class PostsIT extends BaseIT {
 
     private PostEndpoint postEndpoint = new PostEndpoint();
 
@@ -33,7 +33,7 @@ public class PostsIT extends BaseTest {
     public void verifyAllPosts() {
         var response = postEndpoint.getPosts();
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
         var posts = Arrays.asList(JsonConverter.convertToJson(response, Post[].class));
         assertThat(posts.size()).isEqualTo(100);
@@ -45,7 +45,7 @@ public class PostsIT extends BaseTest {
     public void verifyPost() {
         var response = postEndpoint.getPost(TEST_POST_ID);
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPost(post, TEST_POST_ID, TEST_USER_ID);
@@ -56,7 +56,7 @@ public class PostsIT extends BaseTest {
     public void verifyPostComments() {
         var response = postEndpoint.getPostComments(TEST_POST_ID);
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
         var comments = Arrays.asList(JsonConverter.convertToJson(response, Comment[].class));
         assertThat(comments.size()).isEqualTo(5);
@@ -67,7 +67,7 @@ public class PostsIT extends BaseTest {
     public void verifyPostsFilterByUserId() {
         var response = postEndpoint.getPostsFilterByUserId(TEST_USER_ID);
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
         var posts = Arrays.asList(JsonConverter.convertToJson(response, Post[].class));
         assertThat(posts.size()).isEqualTo(10);
@@ -81,7 +81,7 @@ public class PostsIT extends BaseTest {
 
         var response = postEndpoint.addPost(TEST_USER_ID, testTitle, testBody);
 
-        assertStatusCreated(response);
+        postSteps.assertStatusCreated(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPost(post, 101, TEST_USER_ID, testTitle, testBody);
@@ -92,7 +92,7 @@ public class PostsIT extends BaseTest {
     public void verifyDeletePost() {
         var response = postEndpoint.deletePost(TEST_POST_ID);
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
     }
 
@@ -104,7 +104,7 @@ public class PostsIT extends BaseTest {
 
         var response = postEndpoint.updatePostWithPut(TEST_USER_ID, TEST_POST_ID, testTitle, testBody);
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPost(post, TEST_POST_ID, TEST_USER_ID, testTitle, testBody);
@@ -117,7 +117,7 @@ public class PostsIT extends BaseTest {
 
         var response = postEndpoint.updatePostTitleWithPatch(TEST_POST_ID, testTitle);
 
-        assertStatusOk(response);
+        postSteps.assertStatusOk(response);
 
         var post = JsonConverter.convertToJson(response, Post.class);
         postSteps.verifyPostAfterTitleChanged(post, TEST_POST_ID, testTitle);

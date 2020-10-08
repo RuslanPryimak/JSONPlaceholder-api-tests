@@ -1,35 +1,31 @@
-package com.epam.ta.tests;
+package com.epam.ta.steps;
 
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BaseTest {
+public class BaseSteps {
 
-    @BeforeEach
-    public void printTestName(TestInfo testInfo) {
-        System.out.println("Test case: " + testInfo.getDisplayName());
-    }
-
+    @Step("HTTP Status is 200")
     public void assertStatusOk(Response response) {
         assertThat(response.getStatusCode())
                 .as("wrong status code")
                 .isEqualTo(HttpStatus.SC_OK);
     }
 
+    @Step("HTTP Status is 201")
     public void assertStatusCreated(Response response) {
         assertThat(response.getStatusCode())
                 .as("wrong status code")
                 .isEqualTo(HttpStatus.SC_CREATED);
     }
 
+    @Step("HTTP Status is 404")
     public void assertStatusNotFound(Response response) {
         assertThat(response.getStatusCode())
                 .as("wrong status code")
                 .isEqualTo(HttpStatus.SC_NOT_FOUND);
     }
-
 }

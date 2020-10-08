@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback {
     private static final Logger LOG = LoggerFactory.getLogger(TestResultLoggerExtension.class);
 
-    private List<TestResultStatus> testResultsStatus = new ArrayList<>();
+    private final List<TestResultStatus> TEST_RESULTS_STATUS = new ArrayList<>();
 
     private enum TestResultStatus {
         SUCCESSFUL, ABORTED, FAILED, DISABLED
@@ -29,7 +29,7 @@ public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback 
                 context.getDisplayName(),
                 reason.orElse("No reason"));
 
-        testResultsStatus.add(TestResultStatus.DISABLED);
+        TEST_RESULTS_STATUS.add(TestResultStatus.DISABLED);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback 
         LOG.info("Status 'SUCCESSFUL' for test '{}'",
                 context.getDisplayName());
 
-        testResultsStatus.add(TestResultStatus.SUCCESSFUL);
+        TEST_RESULTS_STATUS.add(TestResultStatus.SUCCESSFUL);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback 
         LOG.info("Status 'ABORTED' for test '{}'",
                 context.getDisplayName());
 
-        testResultsStatus.add(TestResultStatus.ABORTED);
+        TEST_RESULTS_STATUS.add(TestResultStatus.ABORTED);
     }
 
     @Override
@@ -53,12 +53,12 @@ public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback 
         LOG.info("Status 'FAILED' for test '{}'",
                 context.getDisplayName());
 
-        testResultsStatus.add(TestResultStatus.FAILED);
+        TEST_RESULTS_STATUS.add(TestResultStatus.FAILED);
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        Map<TestResultStatus, Long> summary = testResultsStatus.stream()
+        Map<TestResultStatus, Long> summary = TEST_RESULTS_STATUS.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         LOG.info("TEST RESULT SUMMARY FOR '{}' {}", context.getDisplayName(), summary.toString());

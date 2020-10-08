@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @DisplayName("Users test suite")
 @ExtendWith(TestResultLoggerExtension.class)
-public class UsersIT extends BaseTest {
+public class UsersIT extends BaseIT {
 
     private UserEndpoint userEndpoint = new UserEndpoint();
 
@@ -39,7 +39,7 @@ public class UsersIT extends BaseTest {
     public void verifyAllUsers() {
         var response = userEndpoint.getUsers();
 
-        assertStatusOk(response);
+        userSteps.assertStatusOk(response);
 
         var users = Arrays.asList(JsonConverter.convertToJson(response, User[].class));
         assertThat(users.size()).isEqualTo(10);
@@ -50,7 +50,7 @@ public class UsersIT extends BaseTest {
     public void verifyUser() {
         var response = userEndpoint.getUser(TEST_USER_ID);
 
-        assertStatusOk(response);
+        userSteps.assertStatusOk(response);
 
         var user = JsonConverter.convertToJson(response, User.class);
         userSteps.verifyUser(user, TEST_USER_ID, TEST_NAME, TEST_USERNAME);
@@ -62,7 +62,7 @@ public class UsersIT extends BaseTest {
     public void verifyUsers(UserData userData) {
         var response = userEndpoint.getUser(userData.getUserId());
 
-        assertStatusOk(response);
+        userSteps.assertStatusOk(response);
 
         var user = JsonConverter.convertToJson(response, User.class);
         userSteps.verifyUser(user, userData.getUserId(), userData.getName(), userData.getUsername());
@@ -74,7 +74,7 @@ public class UsersIT extends BaseTest {
     public void verifyUsersNotFound(int test_user_id) {
         var response = userEndpoint.getUser(test_user_id);
 
-        assertStatusNotFound(response);
+        userSteps.assertStatusNotFound(response);
 
     }
 
@@ -89,7 +89,7 @@ public class UsersIT extends BaseTest {
 
         var response = userEndpoint.addUser(TEST_NAME, TEST_USERNAME, email, address, phone, website, company);
 
-        assertStatusCreated(response);
+        userSteps.assertStatusCreated(response);
 
         var user = JsonConverter.convertToJson(response, User.class);
         userSteps.verifyUser(user, 11, TEST_NAME, TEST_USERNAME, email, address, phone, website, company);
@@ -100,7 +100,7 @@ public class UsersIT extends BaseTest {
     public void verifyDeleteUser() {
         var response = userEndpoint.deleteUser(TEST_USER_ID);
 
-        assertStatusOk(response);
+        userSteps.assertStatusOk(response);
 
     }
 
@@ -115,7 +115,7 @@ public class UsersIT extends BaseTest {
 
         var response = userEndpoint.updateUserWithPut(TEST_USER_ID, TEST_NAME, TEST_USERNAME, email, address, phone, website, company);
 
-        assertStatusOk(response);
+        userSteps.assertStatusOk(response);
 
         var user = JsonConverter.convertToJson(response, User.class);
         userSteps.verifyUser(user, TEST_USER_ID, TEST_NAME, TEST_USERNAME, email, address, phone, website, company);
@@ -128,7 +128,7 @@ public class UsersIT extends BaseTest {
 
         var response = userEndpoint.updateUsernameWithPatch(TEST_USER_ID, testUsername);
 
-        assertStatusOk(response);
+        userSteps.assertStatusOk(response);
 
         var user = JsonConverter.convertToJson(response, User.class);
         userSteps.verifyUserAfterUsernameChanged(user, TEST_USER_ID, testUsername);
